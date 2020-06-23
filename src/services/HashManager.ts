@@ -1,4 +1,4 @@
-import * as bcrypt from "bcryptjs";
+import bcrypt from 'bcryptjs';
 
 export class HashManager {
 
@@ -12,5 +12,4 @@ export class HashManager {
     public async compare(text: string, hash: string): Promise<boolean>{
         return await bcrypt.compare(text, hash);
     }
-
 }

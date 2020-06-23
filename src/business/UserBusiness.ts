@@ -7,7 +7,9 @@ export class UserBusiness{
 
     public async signup(name: string, email: string, password: string ) : Promise<string>{
         const id = this.idGenerator.generate();
-        wait this.userDatabase.signup(name, email, password);
+
+        await this.userDatabase.signup(name, email, password);
+        
         return id;
     }
 

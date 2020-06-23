@@ -9,12 +9,13 @@ export class UserDatabase extends BaseDataBase {
 
     public async signup(name: string, email: string, password: string) {
         try {
-            const id = this.idGenerator.generate();
+            const user_id = this.idGenerator.generate();
+
             await super.getConnection().raw(`
-             INSERT INTO Labook_users(id, name, email, password)
+             INSERT INTO Labook_users(user_id, name, email, password)
              VALUES
                  (
-                "${id}",
+                "${user_id}",
                 "${name}",
                 "${email}",
                 "${password}"

@@ -1,4 +1,4 @@
-import * as jwt from "jsonwebtoken";
+import  jwt from "jsonwebtoken";
 
 export class Authenticator {
   public generateToken(input: AuthenticationData,
