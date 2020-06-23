@@ -9,7 +9,7 @@ export class UserBusiness{
         const id = this.idGenerator.generate();
 
         await this.userDatabase.signup(name, email, password);
-        
+
         return id;
     }
 
