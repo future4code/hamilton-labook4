@@ -4,10 +4,12 @@ import { HashManager } from "../services/HashManager";
 import { Authenticator } from "../services/Authenticator";
 import { SignupInputDTO } from "../dto/UserDTO";
 
+const userBusiness: UserBusiness = new UserBusiness();
+const authenticator = new Authenticator();
 
 export class UserController {
     async signup(req: Request, res: Response) {
-        const userBusiness: UserBusiness = new UserBusiness();
+      
         try {
             const userData: SignupInputDTO = {
                 name: req.body.name,
@@ -20,8 +22,6 @@ export class UserController {
 
             const id = await userBusiness.signup(userData.name, userData.email, hashPassword);
 
-            const authenticator = new Authenticator();
-
             const accessToken = authenticator.generateToken({
                 id: id                
             });
@@ -33,4 +33,22 @@ export class UserController {
         }
     }
 
+    async friendship(req: Request, res: Response) {
+        try {
+            const token = req.headers.authorization as string;
+
+            authenticator.getData(token);
+
+            const { user_id } = req.params;
+            const { friend_id } = req.body;
+
+            await userBusiness.friendship(user_id, friend_id);
+
+            res.status(200).send({ message: "Solicitação de amizade enviada com sucesso!" })
+        } catch(err) {
+            res.status(400).send({ error: err.message });
+        }
+    }
+
 };
+

@@ -25,4 +25,20 @@ export class UserDatabase extends BaseDataBase {
             }
     }
 
+    public async friendship(user_id: string,  friend_id: string) {
+        try {
+            await super.getConnection().raw(
+            `
+                INSERT INTO Labook_friendship(user_id, friend_id)
+                VALUES (
+                    "${user_id}",
+                    "${friend_id}"
+                )
+            `
+            )
+        } catch(err) {
+            throw new Error(err.message)
+        }
+    }
 };
+
