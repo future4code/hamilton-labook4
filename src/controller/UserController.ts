@@ -2,12 +2,15 @@ import { Request, Response } from "express";
 import { UserBusiness } from "../business/UserBusiness";
 import { HashManager } from "../services/HashManager";
 import { Authenticator } from "../services/Authenticator";
-import { SignupInputDTO } from "../dto/UserDTO";
+import { SignupInputDTO, LoginInputDTO } from "../dto/UserDTO";
+import { UserDatabase } from "../data/UserDatabase";
 
 const userBusiness: UserBusiness = new UserBusiness();
 const authenticator = new Authenticator();
 
 export class UserController {
+
+    
     async signup(req: Request, res: Response) {
       
         try {
@@ -49,6 +52,42 @@ export class UserController {
             res.status(400).send({ error: err.message });
         }
     }
+
+   
+    async login (req: Request, res: Response) {
+        try {
+          const userData: LoginInputDTO = {
+            email: req.body.email,
+            password: req.body.password,
+          };
+      
+          if (!userData.email && userData.email.indexOf("@") === -1) {
+            throw new Error("Invalid Email");
+          }
+      
+          const user = await UserDatabase.getUserByEmail(userData.email);
+      
+          const decryptedPassword = HashManager.compare(
+            userData.password,
+            user.password
+          );
+      
+          if (!decryptedPassword) {
+            throw new Error("Invalid Password");
+          }
+      
+          const token = auth.generateToken({ id: user.id });
+      
+          res.status(200).send({
+            token,
+          });
+        } catch (err) {
+          res.status(400).send({
+            message: err.message,
+          });
+        }
+      });
+      
 
 };
 
