@@ -8,9 +8,13 @@ const userBusiness: UserBusiness = new UserBusiness();
 const authenticator = new Authenticator();
 
 export class UserController {
-    async signup(req: Request, res: Response) {
-      
+    async signup(req: Request, res: Response) {      
         try {
+
+            if (!req.body.email || req.body.email.indexOf("@") === -1) {
+                throw new Error("Invalid email");
+            }
+
             const userData: SignupInputDTO = {
                 name: req.body.name,
                 email: req.body.email,
@@ -37,7 +41,7 @@ export class UserController {
         try {
             const token = req.headers.authorization as string;
 
-            authenticator.getData(token);
+            const authenticationData =  authenticator.getData(token);
 
             const { user_id } = req.params;
             const { friend_id } = req.body;
