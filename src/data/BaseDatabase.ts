@@ -3,9 +3,7 @@ import Knex from "knex";
 
 
 export abstract class BaseDataBase{
-
-    abstract tableName: string;
-    
+   
     getConnection(): Knex{
         return knex({
             client: "mysql",
