@@ -17,3 +17,17 @@ export class UserBusiness{
    
 };
 
+
+    public async login(email: string) {
+        await this.userDatabase.getUserByEmail(email);
+    }
+    }
+
+    // public async approve(id: string){
+    //     await this.userDatabase.approve(id);
+    // }
+
+    // public async getUserById(user_id: string){
+    //    return await this.userDatabase.getUserById(user_id);
+    // }
+
