@@ -53,6 +53,7 @@ export class UserController {
         }
     }
 
+
     async login(req: Request, res: Response) {
         try {
             if (!req.body.email || req.body.email.indexOf("@") === -1) {
@@ -112,3 +113,7 @@ export class UserController {
     //          res.status(400).send({ error: err.message });
     //     }
     // }
+
+};
+
+

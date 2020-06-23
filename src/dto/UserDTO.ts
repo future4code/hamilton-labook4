@@ -4,6 +4,3 @@ export interface SignupInputDTO {
     password: string,    
 }
 
-export interface GetUserByIdInputDTO {
-id: string
-}
