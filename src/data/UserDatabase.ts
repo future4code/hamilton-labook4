@@ -3,7 +3,7 @@ import { IdGenerator } from "../services/IdGenerator";
 import { User } from "../models/User";
 
 export class UserDatabase extends BaseDataBase {
-    tableName: string = "Labook_user";
+    tableName: string = "Labook_users";
 
     private idGenerator = new IdGenerator();
 
@@ -11,7 +11,7 @@ export class UserDatabase extends BaseDataBase {
         try {
             const id = this.idGenerator.generate();
             await super.getConnection().raw(`
-             INSERT INTO Labook_user(id, name, email, password)
+             INSERT INTO Labook_users(id, name, email, password)
              VALUES
                  (
                 "${id}",
