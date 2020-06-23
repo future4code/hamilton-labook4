@@ -7,16 +7,20 @@ export class UserBusiness{
 
     public async signup(name: string, email: string, password: string ) : Promise<string>{
         const id = this.idGenerator.generate();
-        await this.userDatabase.signup(id, name, email, password);
+       // await this.userDatabase.signup(id, name, email, password);
         return id;
     }
 
-    public async approve(id: string){
-        await this.userDatabase.approve(id);
+    public async friendship(user_id: string, friend_id: string): Promise<any> {
+        await this.userDatabase.friendship(user_id, friend_id);
     }
 
-    public async getUserById(id: string){
-        //return pois é um select
-       return await this.userDatabase.getUserById(id);
-    }
+    // public async approve(id: string){
+    //     await this.userDatabase.approve(id);
+    // }
+
+    // public async getUserById(id: string){
+    //     //return pois é um select
+    //    return await this.userDatabase.getUserById(id);
+    // }
 }

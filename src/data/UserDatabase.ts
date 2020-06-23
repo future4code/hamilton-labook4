@@ -3,7 +3,7 @@ import { IdGenerator } from "../services/IdGenerator";
 import { User } from "../models/User";
 
 export class UserDatabase extends BaseDataBase {
-    tableName: string = "Labook_user";
+    tableName: string = "Labook_users";
 
     private idGenerator = new IdGenerator();
 
@@ -11,7 +11,7 @@ export class UserDatabase extends BaseDataBase {
         try {
             const id = this.idGenerator.generate();
             await super.getConnection().raw(`
-             INSERT INTO Labook_user(id, name, email, password)
+             INSERT INTO Labook_users(id, name, email, password)
              VALUES
                  (
                 "${id}",
@@ -23,6 +23,22 @@ export class UserDatabase extends BaseDataBase {
             } catch (err) {
                 throw new Error(err.message);
             }
+    }
+
+    public async friendship(user_id: string,  friend_id: string) {
+        try {
+            await super.getConnection().raw(
+            `
+                INSERT INTO Labook_friendship(user_id, friend_id)
+                VALUES (
+                    "${user_id}",
+                    "${friend_id}"
+                )
+            `
+            )
+        } catch(err) {
+            throw new Error(err.message)
+        }
     }
 
     // public async approve(id: string){
