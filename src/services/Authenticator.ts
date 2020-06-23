@@ -22,6 +22,7 @@ export class Authenticator {
       id: payload.id,
       role: payload.role
     };
+    
     return result;
   }
 }
