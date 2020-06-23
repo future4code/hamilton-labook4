@@ -7,7 +7,4 @@ userRouter.post("/", new UserController().signup);
 
 userRouter.post("/", new UserController().friendship);
 
-//userRouter.get("/:id", new UserController().getUserById);
-
-//userRouter.post("/approve", new UserController().approve);
 
