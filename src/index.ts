@@ -28,6 +28,7 @@ app.use("/user", userRouter);
 app.use("/post/", postRouter);
 app.use("/", friendshipRouter);
 
+
 // app.post("/friendrequest", createFriendship);
 
 // app.post("/createpost", createPost);
