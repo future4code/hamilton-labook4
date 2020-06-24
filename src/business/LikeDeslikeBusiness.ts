@@ -1,19 +1,44 @@
-import { LikeDeslikeDatabase } from "../data/LikeDeslikeDatabase";
+import { FriendsDatabase } from "../data/FriendsDatabase";
+import { UserDatabase } from "../data/UserDatabase";
 
-export class LikeDeslikeBusiness {
-  public async likeDeslike(postId: string, UserId: string) {
-    const likeDeslikeDataBase = new LikeDeslikeDatabase();
+export class FriendsBusiness {
+  async createFriendship(friendReceiverId: string, userId: string) {
+    const user = await new UserDatabase().getUserId(userId);
 
-    const verifyLike = await likeDeslikeDataBase.verify(postId, UserId);
+    const friend = await new UserDatabase().getUserId(friendReceiverId);
 
-    if (!verifyLike) {
-      await likeDeslikeDataBase.addLike(postId, UserId);
-      return " added like";
+    if (!user || !friend) {
+      throw new Error("Usuários não encontrado");
     }
 
-    if (verifyLike) {
-      await likeDeslikeDataBase.removeLike(postId, UserId);
-      return " removed like";
+    const friendRequest = new FriendsDatabase();
+    const friendCheck = await friendRequest.checkFriendship(
+      userId,
+      friendReceiverId
+    );
+    if (friendCheck) {
+      throw new Error("Amizade ja existe.");
     }
+    await friendRequest.createFriendship(userId, friendReceiverId);
+  }
+
+  async deleteFriendship(friendReceiverId: string, userId: string) {
+    const user = await new UserDatabase().getUserId(userId);
+
+    const friend = await new UserDatabase().getUserId(friendReceiverId);
+
+    if (!user || !friend) {
+      throw new Error("Usuários não encontrado");
+    }
+
+    const friendRequest = new FriendsDatabase();
+    const friendCheck = await friendRequest.checkFriendship(
+      userId,
+      friendReceiverId
+    );
+    if (!friendCheck) {
+      throw new Error("Amizade não existe.");
+    }
+    await friendRequest.deleteFriendship(userId, friendReceiverId);
   }
 }
