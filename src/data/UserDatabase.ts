@@ -12,7 +12,7 @@ export class UserDatabase extends BaseDataBase {
             const user_id = this.idGenerator.generate();
 
             await super.getConnection().raw(`
-             INSERT INTO Labook_users(user_id, name, email, passwogit rd)
+             INSERT INTO Labook_users(user_id, name, email, password)
              VALUES
                  (
                 "${user_id}",
@@ -25,6 +25,19 @@ export class UserDatabase extends BaseDataBase {
                 throw new Error(err.message);
             }
     }
+
+
+    public async getUserByEmail(email: string): Promise<any> {
+        try{
+            const result = await this.getConnection()
+                .select("*")
+                .from("Labook_users")
+                .where({ email });
+            return result[0];
+        }catch (err){
+            throw new Error(err.message)
+        }
+        
 
     public async getUserById(user_id: string) {
         try {
@@ -54,19 +67,16 @@ export class UserDatabase extends BaseDataBase {
         }
     }
 
-    public async getUserByEmail(email:string):Promise<any>{
-        try {
-            const result = await this.getConnection()
-            .select("*").from(UserDatabase.TABLE_NAME).where({
-                email
-            })
-           
-            return result[0]
-        }catch(err) {
-            throw new Error(err.message)
-        }
-        
-    }
 
+    public async deleteFriendship(user_id: string,  friend_id: string): Promise<void> {
+        try{
+            await this.getConnection().raw(`
+                DELETE FROM Labook_friendship
+                WHERE "${user_id}" AND "${friend_id}"
+            `)           
+        }catch (err) {
+            throw new Error(err.message)
+        }       
+    }
 };
 
