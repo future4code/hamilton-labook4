@@ -4,7 +4,6 @@ import { UserController } from "../controller/UserController";
 export const userRouter = express.Router();
 
 userRouter.post("/", new UserController().signup);
-userRouter.post("/", new UserController().login);
 
 userRouter.post("/friendship", new UserController().friendship);
 
