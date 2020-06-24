@@ -14,6 +14,14 @@ export class UserBusiness{
     public async friendship(user_id: string, friend_id: string): Promise<any> {
         await this.userDatabase.friendship(user_id, friend_id);
     }
+
+    public async login(email: string): Promise<any> {
+        await this.userDatabase.getUserByEmail(email);
+    }
+
+    public async deletefriendship(user_id: string, friend_id: string){
+        await this.userDatabase.deleteFriendship(user_id, friend_id);
+    }
    
 };
 

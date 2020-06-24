@@ -65,9 +65,11 @@ export class UserController {
             throw new Error("Invalid Email");
           }
       
-          const user = await UserDatabase.getUserByEmail(userData.email);
-      
-          const decryptedPassword = HashManager.compare(
+          const user = await userBusiness.login(userData.email); 
+          
+          const hashManager = new HashManager();
+              
+          const decryptedPassword = hashManager.compare(
             userData.password,
             user.password
           );
@@ -76,7 +78,7 @@ export class UserController {
             throw new Error("Invalid Password");
           }
       
-          const token = auth.generateToken({ id: user.id });
+          const token = authenticator.generateToken({ id: user.id });
       
           res.status(200).send({
             token,
