@@ -3,10 +3,12 @@ import { UserBusiness } from "../business/UserBusiness";
 import { HashManager } from "../services/HashManager";
 import { Authenticator } from "../services/Authenticator";
 import { SignupInputDTO, LoginInputDTO } from "../dto/UserDTO";
+import { userRouter } from "../router/UserRouter";
 import { UserDatabase } from "../data/UserDatabase";
 
 const userBusiness: UserBusiness = new UserBusiness();
 const authenticator = new Authenticator();
+const userDatabase = new UserDatabase();
 
 export class UserController {
 
@@ -90,6 +92,6 @@ export class UserController {
         }
       });
       
-
 };
+
 

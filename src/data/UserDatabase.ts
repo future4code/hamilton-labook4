@@ -3,7 +3,7 @@ import { IdGenerator } from "../services/IdGenerator";
 import { User } from "../models/User";
 
 export class UserDatabase extends BaseDataBase {
-    tableName: string = "Labook_users";
+    static TABLE_NAME: string = "Labook_users";
 
     private idGenerator = new IdGenerator();
 
@@ -26,6 +26,7 @@ export class UserDatabase extends BaseDataBase {
             }
     }
 
+
     public async getUserByEmail(email: string): Promise<any> {
         try{
             const result = await this.getConnection()
@@ -37,6 +38,17 @@ export class UserDatabase extends BaseDataBase {
             throw new Error(err.message)
         }
         
+
+    public async getUserById(user_id: string) {
+        try {
+            const result = await super.getConnection().raw(`
+                SELECT * FROM Labook_users
+                WHERE user_id = "${user_id}"
+            `)
+            return result[0]
+        }catch(err) {
+            throw new Error(err.message);
+        }
     }
 
     public async friendship(user_id: string,  friend_id: string) {
@@ -54,6 +66,7 @@ export class UserDatabase extends BaseDataBase {
             throw new Error(err.message)
         }
     }
+
 
     public async deleteFriendship(user_id: string,  friend_id: string): Promise<void> {
         try{
