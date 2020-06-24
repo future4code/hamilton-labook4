@@ -1,16 +1,19 @@
-import express, { Request, Response } from "express";
-import { AddressInfo } from "net";
 import dotenv from "dotenv";
+import { AddressInfo } from "net";
+import express from "express";
+import { login } from "./endpoints/login";
+import { createFriendship } from "./endpoints/friendrequest";
+import { createPost } from "./endpoints/createpost";
+import { getPostsFriends } from "./endpoints/getPostsFriends";
+import { getPostsType } from "./endpoints/getPostsType";
 import { userRouter } from "./router/UserRouter";
-dotenv.config();
+import { UserController } from "./controller/UserController";
+import { postRouter } from "./router/PostRouter";
+import { friendshipRouter } from "./router/FriendshipRouter";
 
+dotenv.config();
 const app = express();
 app.use(express.json());
-
-app.use("/signup", userRouter);
-app.use("/login", userRouter);
-app.use("/friendship", userRouter);
-
 
 const server = app.listen(process.env.PORT || 3000, () => {
   if (server) {
@@ -20,3 +23,14 @@ const server = app.listen(process.env.PORT || 3000, () => {
     console.error(`Failure upon starting server.`);
   }
 });
+
+app.use("/user", userRouter);
+app.use("/post/", postRouter);
+app.use("/", friendshipRouter);
+
+// app.post("/friendrequest", createFriendship);
+
+// app.post("/createpost", createPost);
+
+// app.get("/post/feed", getPostsFriends);
+// app.get("/post/feedtype", getPostsType);
