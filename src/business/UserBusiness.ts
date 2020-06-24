@@ -22,20 +22,16 @@ export class UserBusiness{
     public async deletefriendship(user_id: string, friend_id: string){
         await this.userDatabase.deleteFriendship(user_id, friend_id);
     }
-   
+
+    public async createPost(
+        post_id:string,
+        user_id: string, 
+        photo: string, 
+        description: string, 
+        date: string, 
+        type: string
+    ): Promise<void>{
+        await this.userDatabase.createPost(post_id, user_id, photo, description, date, type);
+    }
+        
 };
-
-
-    public async login(email: string) {
-        await this.userDatabase.getUserByEmail(email);
-    }
-    }
-
-    // public async approve(id: string){
-    //     await this.userDatabase.approve(id);
-    // }
-
-    // public async getUserById(user_id: string){
-    //    return await this.userDatabase.getUserById(user_id);
-    // }
-

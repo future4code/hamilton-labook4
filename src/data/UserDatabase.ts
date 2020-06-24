@@ -37,6 +37,7 @@ export class UserDatabase extends BaseDataBase {
         }catch (err){
             throw new Error(err.message)
         }
+    }
         
 
     public async getUserById(user_id: string) {
@@ -78,5 +79,36 @@ export class UserDatabase extends BaseDataBase {
             throw new Error(err.message)
         }       
     }
+
+    public async createPost (
+        user_id: string,
+        photo: string,
+        description: string,
+        type: string
+    ): Promise<any> {
+        const post_id = this.idGenerator.generate();
+        const date = new Date();
+        try{
+            await this.getConnection()
+            .insert({
+                post_id,
+                user_id,
+                photo,
+                description,
+                type,
+                date,
+            })
+            .into("Labook_posts");
+        }catch (err){
+            throw new Error(err.message)
+        }
+    }
+
+
+
+
+
 };
+
+
 
