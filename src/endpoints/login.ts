@@ -28,7 +28,7 @@ export const login = async (req: Request, res: Response) => {
     );
 
     if (!checkHash) {
-      throw new Error("Email ou senha incorreta.");
+      throw new Error("Email ou senha invalidos.");
     }
 
     const tokenManager = new TokenManager();

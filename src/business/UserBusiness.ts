@@ -4,10 +4,10 @@ import { User } from "../models/User";
 
 export class UserBusiness {
   public async signup(
-    id: string,
-    name: string,
-    email: string,
-    password: string
+      id: string,
+      name: string,
+      email: string,
+      password: string
   ) {
     if (!id || !name || !email || !password) {
       throw new Error("invalid input");
@@ -22,24 +22,24 @@ export class UserBusiness {
 
   public async login(email: string, password: string) {
     if (!email || !password) {
-      throw new Error("Preencha os campos");
+      throw new Error("Por Favor preencha os campos");
     }
 
     const userDatabase = new UserDatabase();
     const user = await userDatabase.getUserEmail(email);
 
     if (!user) {
-      throw new Error("Email ou senha incorreta.");
+      throw new Error("Email ou senha Invalidos.");
     }
 
     const hashManager = new HashManager();
     const checkHash = await hashManager.compareHash(
-      password,
-      user.getPassword()
+        password,
+        user.getPassword()
     );
 
     if (!checkHash) {
-      throw new Error("Email ou senha incorreta.");
+      throw new Error("Email ou senha Invalidos.");
     }
 
     return user.getId();

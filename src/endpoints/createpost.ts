@@ -22,7 +22,7 @@ export const createPost = async (
     }
 
     if (postData.type !== "normal" && postData.type !== "evento") {
-      throw new Error("Tipo de post invalido.");
+      throw new Error("Post invalido.");
     }
 
     const postDate: number = moment.now();

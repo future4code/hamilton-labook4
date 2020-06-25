@@ -10,13 +10,13 @@ export class LikeDeslikeController {
       const postId = req.body.postId;
 
       if (!token || !postId) {
-        throw new Error("input empty");
+        throw new Error("Campo Vazio");
       }
 
       const userId = new TokenManager().retrieveDataFromToken(token).id;
       const response = await new LikeDeslikeBusiness().likeDeslike(
-        postId,
-        userId
+          postId,
+          userId
       );
 
       res.status(200).send({ message: response });

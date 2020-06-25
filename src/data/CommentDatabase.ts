@@ -1,5 +1,5 @@
 import { BaseDatabase } from "./BaseDatabase";
-import { Comment } from "../models/Comment";
+import { Comment } from "../models/Comments";
 
 export class CommentDatabase extends BaseDatabase {
   private static NAME_TABLE = "Comments";

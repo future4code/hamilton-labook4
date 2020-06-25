@@ -20,12 +20,12 @@ export class PostController {
       const postDate: number = moment.now();
 
       await new PostBusiness().createPost(
-        id,
-        picurl,
-        description,
-        postDate,
-        tokenData.id,
-        type
+          id,
+          picurl,
+          description,
+          postDate,
+          tokenData.id,
+          type
       );
     } catch (err) {
       res.status(402).send({

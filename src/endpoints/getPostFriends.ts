@@ -1,6 +1,6 @@
 import { TokenManager } from "../services/TokenManager";
 import { Request, Response } from "express";
-import { PostsDatabase } from "../data/PostsDatabase";
+import { PostsDatabase } from "../data/PostDatabase";
 
 export const getPostsFriends = async (
   req: Request,

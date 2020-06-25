@@ -15,8 +15,8 @@ export class FriendsController {
       const tokenData = tokenManager.retrieveDataFromToken(token);
 
       await new FriendsBusiness().createFriendship(
-        friendData.friendReceiverId,
-        tokenData.id
+          friendData.friendReceiverId,
+          tokenData.id
       );
 
       res.status(200).send({
@@ -40,12 +40,12 @@ export class FriendsController {
       const tokenData = tokenManager.retrieveDataFromToken(token);
 
       await new FriendsBusiness().deleteFriendship(
-        friendData.friendReceiverId,
-        tokenData.id
+          friendData.friendReceiverId,
+          tokenData.id
       );
 
       res.status(200).send({
-        sucess: "Amizade deletada!",
+        sucess: "Amizade deletada com sucesso!",
       });
     } catch (err) {
       res.status(402).send({

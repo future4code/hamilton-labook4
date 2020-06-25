@@ -1,26 +1,26 @@
-import { PostsDatabase } from "../data/PostsDatabase";
+import { PostsDatabase } from "../data/PostDatabase";
 import { Post, toUserType } from "../models/Post";
 
 export class PostBusiness {
   async createPost(
-    id: string,
-    picurl: string,
-    description: string,
-    postDate: number,
-    userId: string,
-    type: string
+      id: string,
+      picurl: string,
+      description: string,
+      postDate: number,
+      userId: string,
+      type: string
   ) {
     if (!picurl || !description || !type) {
-      throw new Error("Preencha todos os campos");
+      throw new Error(" Por favor preencha todos os campos ");
     }
 
     const post = new Post(
-      id,
-      picurl,
-      description,
-      postDate,
-      userId,
-      toUserType(type)
+        id,
+        picurl,
+        description,
+        postDate,
+        userId,
+        toUserType(type)
     );
 
     await new PostsDatabase().newPost(post);
