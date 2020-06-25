@@ -34,4 +34,4 @@ app.post("/createpost", createPost);
 
 app.get("/post/feed", getPostsFriends);
 app.get("/post/feedtype", getPostsType);
-
+//
