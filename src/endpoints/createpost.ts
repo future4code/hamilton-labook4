@@ -1,8 +1,8 @@
 import { IdGenerator } from "../services/IdGenerator";
 import { TokenManager } from "../services/TokenManager";
 import { Request, Response } from "express";
-import { PostsDatabase } from "../data/PostsDatabase";
-import * as moment from "moment";
+import { PostsDatabase } from "../data/PostDatabase";
+import  moment from "moment";
 
 export const createPost = async (
   req: Request,

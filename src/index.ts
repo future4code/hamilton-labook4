@@ -9,7 +9,7 @@ import { getPostsType } from "./endpoints/getPostsType";
 import { userRouter } from "./router/UserRouter";
 import { UserController } from "./controller/UserController";
 import { postRouter } from "./router/PostRouter";
-import { friendshipRouter } from "./router/FriendshipRouter";
+//import { friendshipRouter } from "./router/FriendshipRouter";
 
 dotenv.config();
 const app = express();
@@ -27,6 +27,7 @@ const server = app.listen(process.env.PORT || 3000, () => {
 app.use("/user", userRouter);
 app.use("/post/", postRouter);
 app.use("/", friendshipRouter);
+
 
 // app.post("/friendrequest", createFriendship);
 
