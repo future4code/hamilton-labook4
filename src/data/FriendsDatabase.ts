@@ -1,7 +1,7 @@
 import { BaseDatabase } from "./BaseDatabase";
 
 export class FriendsDatabase extends BaseDatabase {
-  public static TABLE_NAME = "friends";
+  public static TABLE_NAME = "Labook_friendship";
 
   public async createFriendship(
     idSender: string,

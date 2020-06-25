@@ -3,7 +3,7 @@ import * as moment from "moment";
 import { Post, PostType } from "../models/Post";
 
 export class PostsDatabase extends BaseDatabase {
-  static TABLE_NAME = "Posts";
+  static TABLE_NAME = "Labook_posts";
 
   private toModel(dbResult?: any): Post | undefined {
     return (

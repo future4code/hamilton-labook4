@@ -7,8 +7,8 @@ export class CommentDatabase extends BaseDatabase {
   public async createComment(comment: Comment): Promise<void> {
     await this.setConnection()
       .insert({
-        id: comment.getId(),
-        comment: comment.getComment(),
+        // id: comment.getId(),
+        // comment: comment.getComment(),
         user_id: comment.getUserId(),
         post_id: comment.getPostId(),
       })

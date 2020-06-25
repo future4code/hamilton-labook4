@@ -15,10 +15,10 @@ export class CommentBusiness {
       throw new Error(" Post ID Invalido!");
     }
 
-    const commentData = new Comment(commentId, comment, userId, postId);
+    //const commentData = new Comment(commentId, comment, userId, postId);
 
     const commentDatabase = new CommentDatabase();
 
-    await commentDatabase.createComment(commentData);
+    //await commentDatabase.createComment(commentData);
   }
 }

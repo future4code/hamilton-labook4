@@ -34,14 +34,14 @@ export const createPost = async (
     const id: string = idGenerator.generateId();
 
     const newPostsDatabase = new PostsDatabase();
-    await newPostsDatabase.newPost(
-      id,
-      postData.picurl,
-      postData.description,
-      postDate,
-      tokenData.id,
-      postData.type
-    );
+    // await newPostsDatabase.newPost(
+    //   id,
+    //   postData.picurl,
+    //   postData.description,
+    //   postDate,
+    //   tokenData.id,
+    //   postData.type
+    // );
 
     res.status(200).send({
       sucess: "Post criado com sucesso.",
