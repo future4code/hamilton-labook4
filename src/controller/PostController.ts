@@ -1,74 +1,86 @@
-import { IdGenerator } from "../services/IdGenerator";
-import { TokenManager } from "../services/TokenManager";
 import { Request, Response } from "express";
-import * as moment from "moment";
 import { PostBusiness } from "../business/PostBusiness";
+import { Authenticator } from "../services/Authenticator";
+import { PostOutput } from "../model/Post";
+import { BaseDatabase } from "../data/BaseDatabase";
+
+const authenticator = new Authenticator()
+const postBusiness = new PostBusiness()
 
 export class PostController {
+
   async createPost(req: Request, res: Response) {
     try {
-      const { picurl, description, type } = req.body;
+      const { image, description, type } = req.body
+      if (
+        description === undefined ||
+        image === undefined ||
+        (description === "" && image === "")
+      ) {
+        throw new Error("Parâmetro inválido")
+      }
 
-      const token = req.headers.authorization as string;
+      const token = req.headers.authorization as string
+      const date = new Date()
 
-      const tokenManager = new TokenManager();
-      const tokenData = tokenManager.retrieveDataFromToken(token);
+      const userData = authenticator.verify(token)
 
-      const idGenerator: any = new IdGenerator();
-      const id: string = idGenerator.generateId();
-
-      const postDate: number = moment.now();
-
-      await new PostBusiness().createPost(
-          id,
-          picurl,
-          description,
-          postDate,
-          tokenData.id,
-          type
-      );
-    } catch (err) {
-      res.status(402).send({
-        messager: err.message,
-      });
-    }
-  }
-
-  async getPostsType(req: Request, res: Response) {
-    try {
-      const token = req.headers.authorization as string;
-      const type = req.body.type;
-
-      const tokenManager = new TokenManager();
-      tokenManager.retrieveDataFromToken(token);
-
-      const postType = await new PostBusiness().getPostType(type);
+      await postBusiness.createPost(image, description, date, type, userData.id)
 
       res.status(200).send({
-        postType,
-      });
+        message: "Post criado !"
+      })
+
     } catch (err) {
-      res.status(402).send({
-        messager: err.message,
-      });
+      res.status(400).send({
+        error: err.message
+      })
     }
+
+    await BaseDatabase.destroyConnection()
   }
 
   async getFeed(req: Request, res: Response) {
     try {
-      const token = req.headers.authorization as string;
-      const tokenManager = new TokenManager();
-      const tokenData = tokenManager.retrieveDataFromToken(token);
+      const token = req.headers.authorization as string
 
-      const feedPosts = await new PostBusiness().getFeed(tokenData.id);
+      const userData = authenticator.verify(token)
+
+      const feed: PostOutput[] = await postBusiness.getFeed(userData.id)
 
       res.status(200).send({
-        feedPosts,
-      });
+        feed
+      })
     } catch (err) {
-      res.status(402).send({
-        messager: err.message,
-      });
+      res.status(400).send({
+        error: err.message
+      })
     }
+
+    await BaseDatabase.destroyConnection()
+  }
+
+
+  async getFeedByType(req: Request, res: Response) {
+    try {
+      const token = req.headers.authorization as string
+      const { type } = req.body
+
+      const userData = authenticator.verify(token)
+
+      const feed: PostOutput[] = await postBusiness.getFeed(userData.id)
+      const filteredFeed = feed.filter(post => post.type === type)
+
+      res.status(200).send({
+        feed: filteredFeed
+      })
+
+    } catch (err) {
+      res.status(400).send({
+        error: err.message
+      })
+    }
+
+    await BaseDatabase.destroyConnection()
   }
 }

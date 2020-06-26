@@ -1,32 +1,44 @@
 import { Request, Response } from "express";
-import { TokenManager } from "../services/TokenManager";
+import { Authenticator } from "../services/Authenticator";
 import { CommentBusiness } from "../business/CommentBusiness";
-import { IdGenerator } from "../services/IdGenerator";
+import { BaseDatabase } from "../data/BaseDatabase";
+
+const authenticator = new Authenticator()
+const commentBusiness = new CommentBusiness()
 
 export class CommentController {
-    async createComment(req: Request, res: Response) {
-        try {
-            const comment = req.body.comment;
-            const token = req.headers.authorization as string;
-            const postId = req.body.postId;
+  async commentPost(req: Request, res: Response) {
+    try {
+      const token = req.headers.authorization as string
+      const { comment, postId } = req.body
 
-            if (!comment) {
-                throw new Error("Comentarios vazios");
-            }
-            const userId = new TokenManager().retrieveDataFromToken(token).id;
+      if (postId === undefined || postId === "") {
+        throw new Error("Informe um post para comentar.")
+      }
 
-            const commentId = new IdGenerator().generateId();
+      if (comment === undefined || comment === "") {
+        throw new Error("O comentário não pode ficar vazio.")
+      }
 
-            await new CommentBusiness().createComment(
-                comment,
-                userId,
-                postId,
-                commentId
-            );
+      if (token === undefined || token === "") {
+        throw new Error("O usuário deve estar logado.")
+      }
 
-            res.status(200).send({ messagem: "Comentário inserido!" });
-        } catch (error) {
-            res.status(400).send({ message: error.message });
-        }
+      const userId = authenticator.verify(token).id
+
+      await commentBusiness.commentPost(comment, userId, postId)
+
+      res.status(200).send({
+        message: "Comentário criado com sucesso !"
+      })
+
+    } catch (err) {
+      res.status(400).send({
+        error: err.message
+      })
     }
+
+    await BaseDatabase.destroyConnection()
+  }
+
 }

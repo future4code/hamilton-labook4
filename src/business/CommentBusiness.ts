@@ -1,24 +1,12 @@
-import { Comment } from "../models/Comments";
+import { IdGenerator } from "../services/IdGenerator";
 import { CommentDatabase } from "../data/CommentDatabase";
-import { PostsDatabase } from "../data/PostDatabase";
 
+const idGenerator = new IdGenerator()
+const commentDatabase = new CommentDatabase()
 export class CommentBusiness {
-  async createComment(
-      comment: string,
-      userId: string,
-      postId: string,
-      commentId: string
-  ) {
-    const verifyPostId = await new PostsDatabase().verifyPostId(postId);
 
-    if (!verifyPostId) {
-      throw new Error(" Post ID Invalido!");
-    }
-
-    //const commentData = new Comment(commentId, comment, userId, postId);
-
-    const commentDatabase = new CommentDatabase();
-
-    //await commentDatabase.createComment(commentData);
+  public async commentPost(comment: string, userId: string, postId: string) {
+    const id = idGenerator.generatorId()
+    return await commentDatabase.commentPost(id, comment, userId, postId)
   }
 }

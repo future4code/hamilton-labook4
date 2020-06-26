@@ -1,41 +1,18 @@
-import { PostsDatabase } from "../data/PostDatabase";
-import { Post, toUserType } from "../models/Post";
+import { IdGenerator } from "../services/IdGenerator"
+import { PostDatabase } from "../data/PostDatabase"
+import { Post } from "../model/Post"
 
+const idGenerator = new IdGenerator()
+const postDatabase = new PostDatabase()
 export class PostBusiness {
-  async createPost(
-      id: string,
-      picurl: string,
-      description: string,
-      postDate: number,
-      userId: string,
-      type: string
-  ) {
-    if (!picurl || !description || !type) {
-      throw new Error(" Por favor preencha todos os campos ");
-    }
 
-    const post = new Post(
-        id,
-        picurl,
-        description,
-        postDate,
-        userId,
-        toUserType(type)
-    );
-
-    await new PostsDatabase().newPost(post);
+  public async createPost(image: string, description: string, creationDate: Date, type: string, userId: string) {
+    const id = idGenerator.generatorId()
+    const post = new Post(id, image, description, creationDate, type, userId)
+    return await postDatabase.createPost(post)  
   }
 
-  async getPostType(type: string) {
-    const postDataBase = new PostsDatabase();
-    const postType = await postDataBase.getFeedType(toUserType(type));
-
-    return postType;
-  }
-  async getFeed(id: string) {
-    const postDataBase = new PostsDatabase();
-    const feedPosts = await postDataBase.getFeed(id);
-
-    return feedPosts;
-  }
+  public async getFeed(id: string) {
+    return await postDatabase.getFeed(id)
+  }  
 }
