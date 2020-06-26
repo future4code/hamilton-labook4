@@ -1,19 +1,19 @@
 import express from "express";
+
 import { PostController } from "../controller/PostController";
+import { LikeController } from "../controller/LikeController";
 import { CommentController } from "../controller/CommentController";
-import { LikeDeslikeController } from "../controller/LikeDeslikeController";
 
-export const postRouter = express.Router();
+export const postRouter = express.Router()
+const postController = new PostController()
+const likeController = new LikeController()
+const commentController = new CommentController()
 
-const post = new PostController();
+postRouter.get("/feed", postController.getFeed)
+postRouter.get("/feed-type", postController.getFeedByType)
 
-const postComment = new CommentController();
+postRouter.post("/create", postController.createPost)
+postRouter.post("/comment", commentController.commentPost)
+postRouter.post("/like", likeController.likePost)
 
-const likeDeslikeManager = new LikeDeslikeController();
-
-postRouter.post("/likeDeslike", likeDeslikeManager.likeDeslike);
-postRouter.post("/create", post.createPost);
-
-postRouter.get("/feedtype", post.getPostsType);
-postRouter.get("/feed", post.getFeed);
-postRouter.get("/comment", postComment.createComment);
+postRouter.delete("/unlike", likeController.unlikePost)

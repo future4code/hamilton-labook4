@@ -1,47 +1,34 @@
-import { UserDatabase } from "../data/UserDatabase";
-import { HashManager } from "../services/HashManager";
-import { User } from "../models/User";
+import { IdGenerator } from '../services/IdGenerator'
+import { HashManager } from '../services/HashManager'
+import { UserDatabase } from '../data/UserDatabase'
+import { User } from '../model/User'
 
+const idGenerator = new IdGenerator()
+const hashManager = new HashManager()
+const userDatabase = new UserDatabase()
 export class UserBusiness {
-  public async signup(
-      id: string,
-      name: string,
-      email: string,
-      password: string
-  ) {
-    if (!id || !name || !email || !password) {
-      throw new Error("invalid input");
+
+    public async signup(email: string, name: string, password: string, role: string){
+        const id = idGenerator.generatorId()
+        const hashPassword = await hashManager.hash(password)
+        const user = new User(id, email, name, hashPassword, role)
+        await userDatabase.createUser(user)
+
+        return { id: id, role: role }
     }
 
-    const hashPassword = await new HashManager().generateHash(password);
+    public async login(email: string, password: string){
+        const user = await userDatabase.getUserByEmail(email)
+        if(!user){
+            throw new Error("Parâmetros Invalidos!")
+        }
+ 
+        const comparePasswords = await hashManager.compare(password, user.getPassword())
+        if (!comparePasswords) {
+            throw new Error("Parâmetros Invalidoss")
+        }
 
-    const user = new User(id, name, email, hashPassword);
-
-    await new UserDatabase().createUser(user);
-  }
-
-  public async login(email: string, password: string) {
-    if (!email || !password) {
-      throw new Error("Por Favor preencha os campos");
+        return { id: user.getId(), role: user.getRole()}
     }
-
-    const userDatabase = new UserDatabase();
-    const user = await userDatabase.getUserEmail(email);
-
-    if (!user) {
-      throw new Error("Email ou senha Invalidos.");
-    }
-
-    const hashManager = new HashManager();
-    const checkHash = await hashManager.compareHash(
-        password,
-        user.getPassword()
-    );
-
-    if (!checkHash) {
-      throw new Error("Email ou senha Invalidos.");
-    }
-
-    return user.getId();
-  }
+    
 }

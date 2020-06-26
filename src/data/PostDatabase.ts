@@ -1,65 +1,54 @@
 import { BaseDatabase } from "./BaseDatabase";
-import * as moment from "moment";
-import { Post, PostType } from "../models/Post";
+import moment from "moment";
+import { Post, PostOutput } from "../model/Post";
 
-export class PostsDatabase extends BaseDatabase {
-  static TABLE_NAME = "Labook_posts";
+export class PostDatabase extends BaseDatabase {
+  private static TABLE_NAME: string = "LaBookPost"
 
-  private toModel(dbResult?: any): Post | undefined {
-    return (
-        dbResult &&
-        new Post(
-            dbResult.id,
-            dbResult.picurl,
-            dbResult.description,
-            moment.unix(dbResult.create_date / 1000).format("DD/MM/YY"),
-            dbResult.user_id,
-            dbResult.type
-        )
-    );
+  public async createPost(post: Post
+  ): Promise<void> {
+    await this.connection()
+      .insert({
+        id: post.getId(),
+        image: post.getImage(),
+        description: post.getDescription(),
+        creation_date: post.getCreationDate(),
+        type: post.getType(),
+        user_id: post.getUserId()
+      })
+      .into(PostDatabase.TABLE_NAME)
   }
 
-  public async newPost(post: Post): Promise<void> {
-    await this.setConnection()
-        .insert({
-          id: post.getId(),
-          picurl: post.getPicurl(),
-          description: post.getDescription(),
-          create_date: post.getCreateDate(),
-          user_id: post.getUserId(),
-          type: post.getType(),
-        })
-        .into(PostsDatabase.TABLE_NAME);
-  }
-
-  public async getFeed(id: string): Promise<Post[]> {
-    const result = await this.setConnection().raw(`
-    SELECT * FROM Posts p
-    JOIN friends f ON f.friendreceiver_id = p.user_id
-    WHERE f.friendsender_id = "${id}" 
-    ORDER BY p.create_date DESC`);
-    console.log(id);
-    return result[0].map((post: any) => {
-      return this.toModel(post);
-    }) as Post[];
-  }
-
-  public async getFeedType(type: PostType): Promise<Post[]> {
-    const result = await this.setConnection()
-        .select("*")
-        .from(PostsDatabase.TABLE_NAME)
-        .where({ type })
-        .orderBy("create_date", "desc");
-    return result.map((post) => {
-      return this.toModel(post);
-    }) as Post[];
-  }
-
-  public async verifyPostId(id: string): Promise<any> {
-    const response = await this.setConnection()
-        .select("id")
-        .from(PostsDatabase.TABLE_NAME)
-        .where({ id });
-    return response[0];
+  public async getFeed(id: string): Promise<PostOutput[]> {
+    const result = await this.connection().raw(`
+      SELECT
+        p.id as post_id,
+        p.image,
+        p.description,
+        p.creation_date,
+        p.type,
+        p.user_id,
+        u.name
+      FROM LaBookPost p
+      JOIN LaBookUser u ON p.user_id = u.id
+      JOIN LaBookUserFollow f ON p.user_id = f.user_to_make_friendship_id OR p.user_id = f.user_id
+      WHERE (f.user_id = "${id}" OR f.user_to_make_friendship_id = "${id}") AND p.user_id <> "${id}"
+      ORDER BY creation_date DESC
+    `)
+    const feed = []
+    for (const item of result[0]) {
+      const creationDateFormated = moment(item.creation_date).format("DD/MM/YYYY")
+      const newPost = new PostOutput(
+        item.post_id,
+        item.image,
+        item.description,
+        creationDateFormated,
+        item.type,
+        item.name,
+        item.user_id
+      )
+      feed.push(newPost)
+    }
+    return feed
   }
 }

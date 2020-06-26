@@ -1,17 +1,16 @@
 import { BaseDatabase } from "./BaseDatabase";
-import { Comment } from "../models/Comments";
 
 export class CommentDatabase extends BaseDatabase {
-  private static NAME_TABLE = "Comments";
+  private static TABLE_NAME: string = "LaBookComment"
 
-  public async createComment(comment: Comment): Promise<void> {
-    await this.setConnection()
-      .insert({
-        // id: comment.getId(),
-        // comment: comment.getComment(),
-        user_id: comment.getUserId(),
-        post_id: comment.getPostId(),
-      })
-      .into(CommentDatabase.NAME_TABLE);
+  public async commentPost(id: string, comment: string, userId: string, postId: string): Promise<void> {
+    await this.connection()
+    .insert({
+      id,
+      comment,
+      user_id: userId,
+      post_id: postId
+    })
+    .into(CommentDatabase.TABLE_NAME)
   }
 }
